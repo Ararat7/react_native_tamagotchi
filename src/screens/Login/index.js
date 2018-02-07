@@ -27,17 +27,16 @@ export default class LoginScreen extends Component {
     };
 
     init = async () => {
-        let user = await AsyncStorage.getItem('user');
-        return JSON.parse(user);
+        return await AsyncStorage.getItem('user');
     };
 
     login = async () => {
         try {
             if (this.state.username && this.state.password) {
-                await AsyncStorage.setItem('user', JSON.stringify(this.state));
-                this.props.navigation.navigate('Playground');
+                await AsyncStorage.setItem('user', this.state.username);
+                this.props.navigation.navigate('Main');
             } else {
-                Alert.alert('Login error', 'Please fill the fields.');
+                Alert.alert('Login error', 'Please fill in the fields.');
             }
         } catch (error) {
             console.log(error);
@@ -47,7 +46,7 @@ export default class LoginScreen extends Component {
     componentWillMount() {
         this.init().then(user => {
             if (user) {
-                this.props.navigation.navigate('Playground');
+                this.props.navigation.navigate('Main');
             } else {
                 this.setState({loading: false});
             }
@@ -57,14 +56,14 @@ export default class LoginScreen extends Component {
     render() {
         if (this.state.loading) {
             return (
-                <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
+                <KeyboardAvoidingView behavior={'padding'} style={styles.wrapper}>
                     <ActivityIndicator size="large" color="#a3c644"/>
                 </KeyboardAvoidingView>
             );
         }
 
         return (
-            <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
+            <KeyboardAvoidingView behavior={'padding'} style={styles.wrapper}>
                 <View style={styles.logoContainer}>
                     <Text style={styles.header}>
                         <Text style={styles.blue}>{'<'}</Text>
@@ -106,9 +105,6 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
     wrapper: {
-        flex: 1,
-    },
-    container: {
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',

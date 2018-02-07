@@ -5,11 +5,11 @@ import {
     StyleSheet
 } from 'react-native';
 
-export default class PlaygroundScreen extends Component {
+export default class ActionsScreen extends Component {
     render () {
         return (
             <View style={styles.container}>
-                <Text>Playground</Text>
+                <Text>Actions</Text>
             </View>
         );
     }

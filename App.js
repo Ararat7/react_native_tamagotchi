@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {StackNavigator} from 'react-navigation';
 
 import LoginScreen from './src/screens/Login';
-import PlaygroundScreen from './src/screens/Playground';
+import MainScreen from './src/screens/Main';
 import AboutScreen from './src/screens/About';
 
 const App = StackNavigator({
     Login: {screen: LoginScreen},
-    Playground: {screen: PlaygroundScreen},
+    Main: {screen: MainScreen},
     About: {screen: AboutScreen}
 }, {
     navigationOptions: {
