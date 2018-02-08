@@ -10,6 +10,7 @@ import {
     Alert,
     ActivityIndicator,
 } from 'react-native';
+import {Font} from 'expo';
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -27,7 +28,21 @@ export default class LoginScreen extends Component {
     };
 
     init = async () => {
-        return await AsyncStorage.getItem('user');
+        try {
+            const user = await AsyncStorage.getItem('user');
+            if (user) {
+                this.props.navigation.navigate('Main');
+            } else {
+                await Font.loadAsync({
+                    OswaldRegular: require('../../fonts/Oswald-Regular.ttf'),
+                    OswaldBold: require('../../fonts/Oswald-Bold.ttf'),
+                    OswaldLight: require('../../fonts/Oswald-Light.ttf'),
+                });
+                this.setState({loading: false});
+            }
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
     };
 
     login = async () => {
@@ -39,18 +54,12 @@ export default class LoginScreen extends Component {
                 Alert.alert('Login error', 'Please fill in the fields.');
             }
         } catch (error) {
-            console.log(error);
+            Alert.alert('Login error', error.message);
         }
     };
 
-    componentWillMount() {
-        this.init().then(user => {
-            if (user) {
-                this.props.navigation.navigate('Main');
-            } else {
-                this.setState({loading: false});
-            }
-        }).catch(error => console.log(error));
+    componentDidMount() {
+        this.init();
     }
 
     render() {
@@ -65,7 +74,7 @@ export default class LoginScreen extends Component {
         return (
             <KeyboardAvoidingView behavior={'padding'} style={styles.wrapper}>
                 <View style={styles.logoContainer}>
-                    <Text style={styles.header}>
+                    <Text style={[styles.header, {fontFamily: 'OswaldRegular'}]}>
                         <Text style={styles.blue}>{'<'}</Text>
                         epamer
                         <Text style={styles.blue}>{'>'}</Text>
