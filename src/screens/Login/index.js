@@ -75,9 +75,9 @@ export default class LoginScreen extends Component {
             <KeyboardAvoidingView behavior={'padding'} style={styles.wrapper}>
                 <View style={styles.logoContainer}>
                     <Text style={[styles.header, {fontFamily: 'OswaldRegular'}]}>
-                        <Text style={styles.blue}>{'<'}</Text>
+                        <Text style={styles.blue}>{'<'} </Text>
                         epamer
-                        <Text style={styles.blue}>{'>'}</Text>
+                        <Text style={styles.blue}> {'>'}</Text>
                     </Text>
                 </View>
                 <View style={styles.formContainer}>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
     header: {
         color: '#464547',
-        fontSize: 60,
+        fontSize: 64,
         marginBottom: 20,
     },
     formContainer: {
