@@ -5,6 +5,8 @@ import {
     StyleSheet
 } from 'react-native';
 
+import styles from './styles';
+
 export default class ActionsScreen extends Component {
     render () {
         return (
@@ -14,12 +16,3 @@ export default class ActionsScreen extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-});
