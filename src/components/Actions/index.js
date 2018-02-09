@@ -8,6 +8,8 @@ import {
     StyleSheet,
 } from 'react-native';
 
+import styles from './styles';
+
 export default class ActionsOverlay extends Component {
     render() {
         return (
@@ -30,17 +32,3 @@ export default class ActionsOverlay extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 0, 0, .8)',
-    },
-    innerContainer: {
-        alignItems: 'center',
-    },
-    white: {
-        color: '#ffffff',
-    },
-});
