@@ -29,10 +29,10 @@ class LoginScreen extends Component {
                 OswaldLight: require('../../fonts/Oswald-Light.ttf'),
             });
 
-            const user = await AsyncStorage.getItem('user');
+            const username = await AsyncStorage.getItem('user');
 
-            if (user) {
-                this.props.navigation.navigate('Main');
+            if (username) {
+                this.props.navigation.navigate('Main', {username});
             } else {
                 this.props.setLoading(false);
             }
@@ -43,10 +43,11 @@ class LoginScreen extends Component {
 
     login = async () => {
         try {
-            if (this.props.username && this.props.password) {
-                await AsyncStorage.setItem('user', this.props.username);
+            const {username, password, navigation} = this.props;
+            if (username && password) {
+                await AsyncStorage.setItem('user', username);
                 Keyboard.dismiss();
-                this.props.navigation.navigate('Main');
+                navigation.navigate('Main', {username});
             } else {
                 Alert.alert('Login error', 'Please fill in the fields.');
             }

@@ -16,13 +16,15 @@ import styles from './styles';
 import {openActions, closeActions,} from '../../actions/mainScreenActions';
 
 class MainScreen extends Component {
-    // redux was added for closing actions modal on 'onPress' event (handling state from static function)
+    // redux was added for handling state from static method
     static navigationOptions = ({navigation}) => {
+        const username = navigation.state.params.username || 'unknown';
+
         return {
             title: 'epamer',
             headerLeft: null,
             headerRight: (
-                <TouchableHighlight onPress={() => {navigation.dispatch(openActions())}}>
+                <TouchableHighlight onPress={() => {navigation.navigate('About', {username})}}>
                     <Ionicons name="ios-contact-outline" size={32} color="#FFFFFF"/>
                 </TouchableHighlight>
             ),
@@ -62,10 +64,6 @@ class MainScreen extends Component {
                 <Button
                     onPress={() => this.props.openActions()}
                     title="Actions"
-                />
-                <Button
-                    onPress={() => this.props.navigation.navigate('About')}
-                    title="About"
                 />
                 <Button
                     onPress={() => this.logout()}
