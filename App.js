@@ -1,33 +1,23 @@
-import React, {Component} from 'react';
-import {StackNavigator} from 'react-navigation';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 
-import LoginScreen from './src/screens/Login';
-import MainScreen from './src/screens/Main';
-import AboutScreen from './src/screens/About';
+import AppReducer from './src/reducers/appReducer';
+import AppWithNavigationState, {middleware} from './src/AppNavigator';
 
-const App = StackNavigator({
-    Login: {
-        screen: LoginScreen,
-        navigationOptions: {
-            header: false,
-            title: 'Login',
-        },
-    },
-    Main: {
-        screen: MainScreen,
-        navigationOptions: {
-            header: false,
-            title: 'Main',
-        },
-    },
-    About: {
-        screen: AboutScreen,
-        navigationOptions: {
-            title: 'About',
-        },
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.store = createStore(AppReducer, applyMiddleware(middleware));
     }
-},  {
-    headerMode: 'screen',
-});
+
+    render() {
+        return (
+            <Provider store={this.store}>
+                <AppWithNavigationState />
+            </Provider>
+        );
+    }
+}
 
 export default App;

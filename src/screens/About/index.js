@@ -3,18 +3,21 @@ import {
     View,
     Text,
     Button,
-    StyleSheet,
 } from 'react-native';
 
 import styles from './styles';
 
 export default class AboutScreen extends Component {
+    static navigationOptions = {
+        title: 'About',
+    };
+
     render () {
         return (
             <View style={styles.container}>
                 <Text>About</Text>
                 <Button
-                    onPress={() => this.props.navigation.navigate('Main')}
+                    onPress={() => this.props.navigation.goBack()}
                     title="Go back"
                 />
             </View>

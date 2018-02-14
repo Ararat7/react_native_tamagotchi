@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
     View,
     Text,
@@ -13,30 +14,27 @@ import {
 import {Font} from 'expo';
 
 import styles from './styles';
+import {setUsername, setPassword, setLoading,} from '../../actions/loginScreenActions';
 
-export default class LoginScreen extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            loading: true,
-            username: '',
-            password: ''
-        };
-    }
+class LoginScreen extends Component {
+    static navigationOptions = {
+        header: false,
+    };
 
     init = async () => {
         try {
+            await Font.loadAsync({
+                OswaldRegular: require('../../fonts/Oswald-Regular.ttf'),
+                OswaldBold: require('../../fonts/Oswald-Bold.ttf'),
+                OswaldLight: require('../../fonts/Oswald-Light.ttf'),
+            });
+
             const user = await AsyncStorage.getItem('user');
+
             if (user) {
                 this.props.navigation.navigate('Main');
             } else {
-                await Font.loadAsync({
-                    OswaldRegular: require('../../fonts/Oswald-Regular.ttf'),
-                    OswaldBold: require('../../fonts/Oswald-Bold.ttf'),
-                    OswaldLight: require('../../fonts/Oswald-Light.ttf'),
-                });
-                this.setState({loading: false});
+                this.props.setLoading(false);
             }
         } catch (error) {
             Alert.alert('Error', error.message);
@@ -45,8 +43,8 @@ export default class LoginScreen extends Component {
 
     login = async () => {
         try {
-            if (this.state.username && this.state.password) {
-                await AsyncStorage.setItem('user', this.state.username);
+            if (this.props.username && this.props.password) {
+                await AsyncStorage.setItem('user', this.props.username);
                 Keyboard.dismiss();
                 this.props.navigation.navigate('Main');
             } else {
@@ -62,7 +60,7 @@ export default class LoginScreen extends Component {
     }
 
     render() {
-        if (this.state.loading) {
+        if (this.props.loading) {
             return (
                 <KeyboardAvoidingView behavior={'padding'} style={styles.wrapper}>
                     <ActivityIndicator size="large" color="#a3c644"/>
@@ -83,7 +81,7 @@ export default class LoginScreen extends Component {
                     <TextInput
                         style={styles.textInput}
                         placeholder='Username'
-                        onChangeText={username => this.setState({username})}
+                        onChangeText={username => this.props.setUsername(username)}
                         underlineColorAndroid='transparent'
                         autoCorrect={false}
                         autoCapitalize='none'
@@ -93,8 +91,10 @@ export default class LoginScreen extends Component {
                     <TextInput
                         style={styles.textInput}
                         placeholder='Password'
-                        onChangeText={password => this.setState({password})}
+                        onChangeText={password => this.props.setPassword(password)}
                         underlineColorAndroid='transparent'
+                        autoCorrect={false}
+                        autoCapitalize='none'
                         secureTextEntry={true}
                         returnKeyType='go'
                         ref={input => this.passwordInput = input}
@@ -110,3 +110,21 @@ export default class LoginScreen extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        username: state.loginScreen.username,
+        password: state.loginScreen.password,
+        loading: state.loginScreen.loading,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUsername: (username) => dispatch(setUsername(username)),
+        setPassword: (password) => dispatch(setPassword(password)),
+        setLoading: (loading) => dispatch(setLoading(loading)),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
