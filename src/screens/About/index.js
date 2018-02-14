@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import styles from './styles';
+import {white, black07} from '../../helpers/colors';
 
 export default class AboutScreen extends Component {
     static navigationOptions = ({navigation}) => {
@@ -19,13 +20,13 @@ export default class AboutScreen extends Component {
                 </Text>
             ),
             headerStyle: {
-                backgroundColor: 'rgba(0, 0, 0, .7)',
+                backgroundColor: black07,
             },
             headerTitleStyle: {
-                color: '#FFFFFF',
+                color: white,
                 textAlign: 'center',
             },
-            headerTintColor: '#FFFFFF',
+            headerTintColor: white,
         };
     };
 

@@ -14,6 +14,7 @@ import {
 import {Font} from 'expo';
 
 import styles from './styles';
+import {green} from '../../helpers/colors';
 import {setUsername, setPassword, setLoading,} from '../../actions/loginScreenActions';
 
 class LoginScreen extends Component {
@@ -64,7 +65,7 @@ class LoginScreen extends Component {
         if (this.props.loading) {
             return (
                 <KeyboardAvoidingView behavior={'padding'} style={styles.wrapper}>
-                    <ActivityIndicator size="large" color="#a3c644"/>
+                    <ActivityIndicator size="large" color={green}/>
                 </KeyboardAvoidingView>
             );
         }

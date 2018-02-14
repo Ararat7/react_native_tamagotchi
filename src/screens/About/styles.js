@@ -1,21 +1,22 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet} from 'react-native';
+import {white, blue} from '../../helpers/colors';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: white,
         padding: 20,
     },
     headerTitle: {
         width: '100%',
         textAlign: 'center',
         paddingRight: 56,
-        color: '#FFFFFF',
+        color: white,
         fontSize: 20,
         fontFamily: 'OswaldRegular',
     },
     blue: {
-        color: '#39c2d7',
+        color: blue,
     },
     aboutText: {
         fontSize: 18,

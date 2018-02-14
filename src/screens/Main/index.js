@@ -12,6 +12,7 @@ import {Ionicons} from '@expo/vector-icons';
 
 import ActionsOverlay from '../../components/Actions';
 import styles from './styles';
+import {white} from '../../helpers/colors';
 
 import {openActions, closeActions,} from '../../actions/mainScreenActions';
 
@@ -25,7 +26,7 @@ class MainScreen extends Component {
             headerLeft: null,
             headerRight: (
                 <TouchableHighlight onPress={() => {navigation.navigate('About', {username})}}>
-                    <Ionicons name="ios-contact-outline" size={32} color="#FFFFFF"/>
+                    <Ionicons name="ios-contact-outline" size={32} color={white}/>
                 </TouchableHighlight>
             ),
             headerTitle: (
@@ -40,11 +41,11 @@ class MainScreen extends Component {
                 paddingHorizontal: 12,
             },
             headerTitleStyle: {
-                color: '#FFFFFF',
+                color: white,
                 marginLeft: 0,
                 textAlign: 'center',
             },
-            headerTintColor: '#FFFFFF',
+            headerTintColor: white,
         };
     };
 
@@ -53,10 +54,16 @@ class MainScreen extends Component {
         this.props.navigation.navigate('Login');
     }
 
+    onActionPress(action) {
+        alert(action);
+    }
+
     render () {
         return (
             <View style={styles.container}>
                 <ActionsOverlay
+                    onActionPress={this.onActionPress}
+                    username={this.props.navigation.state.params.username}
                     actionsVisible={this.props.actionsVisible}
                     closeActions={() => this.props.closeActions()}
                 />

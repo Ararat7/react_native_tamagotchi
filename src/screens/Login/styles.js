@@ -1,9 +1,10 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet} from 'react-native';
+import {white, blue, green, darkGrey, grey} from '../../helpers/colors';
 
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: white,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 40,
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
         paddingTop: 40,
     },
     header: {
-        color: '#464547',
+        color: darkGrey,
         fontSize: 64,
         marginBottom: 20,
     },
@@ -25,8 +26,8 @@ const styles = StyleSheet.create({
     textInput: {
         alignSelf: 'stretch',
         fontSize: 18,
-        color: '#999999',
-        borderColor: '#999999',
+        color: grey,
+        borderColor: grey,
         borderWidth: 1,
         marginBottom: 20,
         paddingLeft: 10,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     },
     button: {
         alignSelf: 'stretch',
-        backgroundColor: '#a3c644',
+        backgroundColor: green,
         alignItems: 'center',
         padding: 15,
         marginBottom: 10,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     blue: {
-        color: '#39c2d7',
+        color: blue,
     }
 });
 
