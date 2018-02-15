@@ -14,7 +14,11 @@ import ActionsOverlay from '../../components/Actions';
 import styles from './styles';
 import {white} from '../../helpers/colors';
 
-import {openActions, closeActions,} from '../../actions/mainScreenActions';
+import {
+    openActions,
+    closeActions,
+    logout,
+} from '../../actions/mainScreenActions';
 
 class MainScreen extends Component {
     // redux was added for handling state from static method
@@ -52,6 +56,7 @@ class MainScreen extends Component {
     async logout() {
         await AsyncStorage.setItem('user', '');
         this.props.navigation.navigate('Login');
+        this.props.logout();
     }
 
     onActionPress(action) {
@@ -91,6 +96,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         openActions: () => dispatch(openActions()),
         closeActions: () => dispatch(closeActions()),
+        logout: () => dispatch(logout()),
     }
 };
 

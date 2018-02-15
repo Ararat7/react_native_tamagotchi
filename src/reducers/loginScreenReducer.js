@@ -12,6 +12,8 @@ export default LoginScreenReducer = (state = initialState, action) => {
             return {...state, password: action.password,};
         case 'SET_LOADING':
             return {...state, loading: action.loading,};
+        case 'LOGOUT':
+            return {...state, username: '', password: '',};
         default:
             return state;
     }
