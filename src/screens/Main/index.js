@@ -4,13 +4,16 @@ import {
     View,
     Text,
     Button,
+    Image,
     StyleSheet,
     AsyncStorage,
     TouchableHighlight,
+    TouchableOpacity,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
 import ActionsOverlay from '../../components/Actions';
+import Progressbar from '../../components/Progressbar';
 import styles from './styles';
 import {white} from '../../helpers/colors';
 
@@ -18,6 +21,7 @@ import {
     openActions,
     closeActions,
     logout,
+    changeProgress,
 } from '../../actions/mainScreenActions';
 
 class MainScreen extends Component {
@@ -60,27 +64,73 @@ class MainScreen extends Component {
     }
 
     onActionPress(action) {
-        alert(action);
+        let progress;
+        switch (action) {
+            case 'home':
+                progress = {personal: 23};
+                break;
+            case 'work':
+                progress = {projectActivities: 43};
+                break;
+            case 'soft':
+                progress = {softSkills: 50};
+                break;
+            case 'hard':
+                progress = {hardSkills: 80};
+                break;
+            default:
+                break;
+        }
+
+        return progress && this.props.changeProgress(progress);
     }
 
     render () {
+        const {
+            actionsVisible,
+            personal,
+            projectActivities,
+            softSkills,
+            hardSkills,
+            closeActions,
+            openActions,
+            navigation,
+        } = this.props;
+
         return (
             <View style={styles.container}>
                 <ActionsOverlay
-                    onActionPress={this.onActionPress}
-                    username={this.props.navigation.state.params.username}
-                    actionsVisible={this.props.actionsVisible}
-                    closeActions={() => this.props.closeActions()}
+                    onActionPress={(action) => {this.onActionPress(action)}}
+                    username={navigation.state.params.username}
+                    actionsVisible={actionsVisible}
+                    closeActions={() => closeActions()}
                 />
-                <Text>Main</Text>
-                <Button
-                    onPress={() => this.props.openActions()}
-                    title="Actions"
-                />
-                <Button
-                    onPress={() => this.logout()}
-                    title="Logout"
-                />
+                <View>
+                    <View style={styles.imageWrapper}>
+                        <Image
+                            style={{width: 256, height: 256}}
+                            source={require('../../images/development.png')}
+                        />
+                    </View>
+                    <View style={styles.progressWrapper}>
+                        <Progressbar label={'Personal'} value={personal}/>
+                        <Progressbar label={'Project activities'} value={projectActivities}/>
+                        <Progressbar label={'Soft skills'} value={softSkills}/>
+                        <Progressbar label={'Hard skills'} value={hardSkills}/>
+                    </View>
+                    <View style={styles.buttonsWrapper}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {openActions()}}>
+                            <Text style={styles.buttonText}>Actions</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {this.logout()}}>
+                            <Text style={styles.buttonText}>Logout</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         );
     }
@@ -89,6 +139,10 @@ class MainScreen extends Component {
 const mapStateToProps = (state) => {
     return {
         actionsVisible: state.mainScreen.actionsVisible,
+        personal: state.mainScreen.personal,
+        projectActivities: state.mainScreen.projectActivities,
+        softSkills: state.mainScreen.softSkills,
+        hardSkills: state.mainScreen.hardSkills,
     };
 };
 
@@ -97,6 +151,7 @@ const mapDispatchToProps = (dispatch) => {
         openActions: () => dispatch(openActions()),
         closeActions: () => dispatch(closeActions()),
         logout: () => dispatch(logout()),
+        changeProgress: (progress) => dispatch(changeProgress(progress)),
     }
 };
 

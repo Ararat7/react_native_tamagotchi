@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     buttonText: {
-        color: '#ffffff',
+        color: white,
         fontSize: 20,
         fontWeight: 'bold',
     },
