@@ -3,9 +3,7 @@ import {connect} from "react-redux";
 import {
     View,
     Text,
-    Button,
     Image,
-    StyleSheet,
     AsyncStorage,
     TouchableHighlight,
     TouchableOpacity,
@@ -33,7 +31,9 @@ class MainScreen extends Component {
             title: 'epamer',
             headerLeft: null,
             headerRight: (
-                <TouchableHighlight onPress={() => {navigation.navigate('About', {username})}}>
+                <TouchableHighlight onPress={() => {
+                    navigation.navigate('About', {username})
+                }}>
                     <Ionicons name="ios-contact-outline" size={32} color={white}/>
                 </TouchableHighlight>
             ),
@@ -85,7 +85,7 @@ class MainScreen extends Component {
         return progress && this.props.changeProgress(progress);
     }
 
-    render () {
+    render() {
         const {
             actionsVisible,
             personal,
@@ -100,7 +100,9 @@ class MainScreen extends Component {
         return (
             <View style={styles.container}>
                 <ActionsOverlay
-                    onActionPress={(action) => {this.onActionPress(action)}}
+                    onActionPress={(action) => {
+                        this.onActionPress(action)
+                    }}
                     username={navigation.state.params.username}
                     actionsVisible={actionsVisible}
                     closeActions={() => closeActions()}
@@ -121,12 +123,16 @@ class MainScreen extends Component {
                     <View style={styles.buttonsWrapper}>
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={() => {openActions()}}>
+                            onPress={() => {
+                                openActions()
+                            }}>
                             <Text style={styles.buttonText}>Actions</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={() => {this.logout()}}>
+                            onPress={() => {
+                                this.logout()
+                            }}>
                             <Text style={styles.buttonText}>Logout</Text>
                         </TouchableOpacity>
                     </View>
@@ -137,13 +143,7 @@ class MainScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {
-        actionsVisible: state.mainScreen.actionsVisible,
-        personal: state.mainScreen.personal,
-        projectActivities: state.mainScreen.projectActivities,
-        softSkills: state.mainScreen.softSkills,
-        hardSkills: state.mainScreen.hardSkills,
-    };
+    return {...state.mainScreen};
 };
 
 const mapDispatchToProps = (dispatch) => {

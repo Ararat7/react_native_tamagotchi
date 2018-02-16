@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
     View,
     Text,
-    Button,
 } from 'react-native';
 
 import styles from './styles';
@@ -30,7 +29,7 @@ export default class AboutScreen extends Component {
         };
     };
 
-    render () {
+    render() {
         const username = this.props.navigation.state.params.username || 'unknown';
         return (
             <View style={styles.container}>

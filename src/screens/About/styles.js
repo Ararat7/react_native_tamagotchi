@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {white, blue} from '../../helpers/colors';
+import {white, blue, grey} from '../../helpers/colors';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },
     aboutText: {
         fontSize: 18,
-        color: 'grey',
+        color: grey,
     },
     bold: {
         fontWeight: '800',

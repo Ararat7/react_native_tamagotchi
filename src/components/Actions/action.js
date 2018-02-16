@@ -12,7 +12,7 @@ import {white, blue, grey} from '../../helpers/colors';
 export default class Action extends Component {
     render() {
         const {onPress, iconName, iconText, iconSize, state} = this.props;
-        let color = state === 'active' ? blue : state === 'inactive' ? grey : white;
+        const color = state === 'active' ? blue : state === 'inactive' ? grey : white;
 
         return (
             <TouchableHighlight

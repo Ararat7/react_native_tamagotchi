@@ -2,10 +2,7 @@ import React, {Component} from 'react';
 import {
     View,
     Text,
-    Button,
     Modal,
-    StatusBar,
-    StyleSheet,
     TouchableHighlight,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
@@ -16,12 +13,14 @@ import Action from './action';
 
 export default class ActionsOverlay extends Component {
     render() {
+        const {username, actionsVisible, closeActions, onActionPress} = this.props;
+
         return (
             <Modal
                 // transparent={true}
-                visible={this.props.actionsVisible}
+                visible={actionsVisible}
                 animationType={'fade'}
-                onRequestClose={this.props.closeActions}
+                onRequestClose={closeActions}
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.innerContainer}>
@@ -29,15 +28,16 @@ export default class ActionsOverlay extends Component {
                             <TouchableHighlight
                                 style={{padding: 5}}
                                 onPress={() => {
-                                    this.props.closeActions()
-                                }}>
+                                    closeActions()
+                                }}
+                            >
                                 <Ionicons name="ios-close-circle-outline" size={40} color={white}/>
                             </TouchableHighlight>
                         </View>
                         <View>
                             <Text style={styles.title}>
                                 <Text style={styles.blue}>{'<'} </Text>
-                                {this.props.username}
+                                {username}
                                 <Text style={styles.blue}> {'>'}</Text>
                             </Text>
                             <Text style={styles.subtitle}>
@@ -47,39 +47,51 @@ export default class ActionsOverlay extends Component {
                         <View>
                             <View style={styles.iconsWrapper}>
                                 <Action
-                                    onPress={() => {this.props.onActionPress('home')}}
+                                    onPress={() => {
+                                        onActionPress('home')
+                                    }}
                                     iconName={'md-home'}
                                     iconSize={50}
                                     iconText={'Home'}
                                 />
                                 <Action
-                                    onPress={() => {this.props.onActionPress('work')}}
+                                    onPress={() => {
+                                        onActionPress('work')
+                                    }}
                                     state={'active'}
                                     iconName={'md-briefcase'}
                                     iconSize={46}
                                     iconText={'Work'}
                                 />
                                 <Action
-                                    onPress={() => {this.props.onActionPress('asmt')}}
+                                    onPress={() => {
+                                        onActionPress('asmt')
+                                    }}
                                     state={'inactive'}
                                     iconName={'md-star'}
                                     iconSize={50}
                                     iconText={'ASMT'}
                                 />
                                 <Action
-                                    onPress={() => {this.props.onActionPress('soft')}}
+                                    onPress={() => {
+                                        onActionPress('soft')
+                                    }}
                                     iconName={'md-chatbubbles'}
                                     iconSize={44}
                                     iconText={'Soft'}
                                 />
                                 <Action
-                                    onPress={() => {this.props.onActionPress('hard')}}
+                                    onPress={() => {
+                                        onActionPress('hard')
+                                    }}
                                     iconName={'md-code-working'}
                                     iconSize={50}
                                     iconText={'Hard'}
                                 />
                                 <Action
-                                    onPress={() => {this.props.onActionPress('docs')}}
+                                    onPress={() => {
+                                        onActionPress('docs')
+                                    }}
                                     iconName={'md-document'}
                                     iconSize={48}
                                     iconText={'Docs'}

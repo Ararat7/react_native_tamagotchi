@@ -114,11 +114,7 @@ class LoginScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {
-        username: state.loginScreen.username,
-        password: state.loginScreen.password,
-        loading: state.loginScreen.loading,
-    };
+    return {...state.loginScreen};
 };
 
 const mapDispatchToProps = (dispatch) => {
