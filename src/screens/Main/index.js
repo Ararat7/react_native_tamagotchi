@@ -7,6 +7,9 @@ import {
     AsyncStorage,
     TouchableHighlight,
     TouchableOpacity,
+    Animated,
+    PanResponder,
+    Dimensions,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
@@ -21,6 +24,8 @@ import {
     logout,
     changeProgress,
 } from '../../actions/mainScreenActions';
+
+const WINDOW_WIDTH = Dimensions.get('window').width;
 
 class MainScreen extends Component {
     // redux was added for handling state from static method
@@ -56,6 +61,37 @@ class MainScreen extends Component {
             headerTintColor: white,
         };
     };
+
+    constructor() {
+        super(...arguments);
+
+        const position = new Animated.ValueXY();
+        const initialPosition = JSON.parse(JSON.stringify(position));   // save initial position
+
+        const panResponder = PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderMove: (event, gesture) => {
+                position.setValue({x: gesture.dx, y: gesture.dy,});
+            },
+            onPanResponderRelease: (event, gesture) => {
+                Animated.spring(position, {
+                    toValue: {x: initialPosition.x, y: initialPosition.y,}
+                }).start();
+            },
+        });
+
+        this.position = position;
+        this.panResponder = panResponder;
+
+        this.bgColor = position.x.interpolate({
+            inputRange: [-WINDOW_WIDTH, 0, WINDOW_WIDTH],
+            outputRange: ['#B22746', '#cccccc', '#a3c644']
+        });
+    }
+
+    getImageStyle() {
+        return this.position.getLayout();
+    }
 
     async logout() {
         await AsyncStorage.setItem('user', '');
@@ -98,7 +134,7 @@ class MainScreen extends Component {
         } = this.props;
 
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, {backgroundColor: this.bgColor}]}>
                 <ActionsOverlay
                     onActionPress={(action) => {
                         this.onActionPress(action)
@@ -109,10 +145,15 @@ class MainScreen extends Component {
                 />
                 <View>
                     <View style={styles.imageWrapper}>
-                        <Image
-                            style={{width: 256, height: 256}}
-                            source={require('../../images/development.png')}
-                        />
+                        <Animated.View
+                            style={this.getImageStyle()}
+                            {...this.panResponder.panHandlers}
+                        >
+                            <Image
+                                style={{width: 256, height: 256}}
+                                source={require('../../images/development.png')}
+                            />
+                        </Animated.View>
                     </View>
                     <View style={styles.progressWrapper}>
                         <Progressbar label={'Personal'} value={personal}/>
@@ -137,7 +178,7 @@ class MainScreen extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </Animated.View>
         );
     }
 }

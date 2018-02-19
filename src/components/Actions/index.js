@@ -19,7 +19,7 @@ export default class ActionsOverlay extends Component {
             <Modal
                 // transparent={true}
                 visible={actionsVisible}
-                animationType={'fade'}
+                animationType={'slide'}
                 onRequestClose={closeActions}
             >
                 <View style={styles.modalContainer}>
