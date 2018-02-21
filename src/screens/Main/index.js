@@ -10,7 +10,9 @@ import {
     Animated,
     PanResponder,
     Dimensions,
+    Alert,
 } from 'react-native';
+import {Permissions, ImagePicker} from 'expo';
 import {Ionicons} from '@expo/vector-icons';
 
 import ActionsOverlay from '../../components/Actions';
@@ -23,6 +25,7 @@ import {
     closeActions,
     logout,
     changeProgress,
+    changeImage,
 } from '../../actions/mainScreenActions';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
@@ -89,6 +92,14 @@ class MainScreen extends Component {
         });
     }
 
+    async componentWillMount() {
+        const imageURI = await AsyncStorage.getItem('imageURI');
+        imageURI && this.props.changeImage(imageURI);
+
+        const {status} = await Permissions.askAsync(Permissions.CAMERA);
+        this.hasCameraPermission = status === 'granted';
+    }
+
     getImageStyle() {
         return this.position.getLayout();
     }
@@ -121,6 +132,23 @@ class MainScreen extends Component {
         return progress && this.props.changeProgress(progress);
     }
 
+    async pickImage() {
+        try {
+            let result = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: .5,
+            });
+
+            if (!result.cancelled) {
+                await AsyncStorage.setItem('imageURI', result.uri);
+                this.props.changeImage(result.uri);
+            }
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
+    }
+
     render() {
         const {
             actionsVisible,
@@ -131,7 +159,10 @@ class MainScreen extends Component {
             closeActions,
             openActions,
             navigation,
+            imageURI,
         } = this.props;
+
+        const imageSrc = imageURI ? {uri: imageURI} : require('../../images/development.png');
 
         return (
             <Animated.View style={[styles.container, {backgroundColor: this.bgColor}]}>
@@ -151,7 +182,7 @@ class MainScreen extends Component {
                         >
                             <Image
                                 style={{width: 256, height: 256}}
-                                source={require('../../images/development.png')}
+                                source={imageSrc}
                             />
                         </Animated.View>
                     </View>
@@ -168,6 +199,14 @@ class MainScreen extends Component {
                                 openActions()
                             }}>
                             <Text style={styles.buttonText}>Actions</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {
+                                this.pickImage()
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Change image</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.button}
@@ -193,6 +232,7 @@ const mapDispatchToProps = (dispatch) => {
         closeActions: () => dispatch(closeActions()),
         logout: () => dispatch(logout()),
         changeProgress: (progress) => dispatch(changeProgress(progress)),
+        changeImage: (imageURI) => dispatch(changeImage(imageURI)),
     }
 };
 
