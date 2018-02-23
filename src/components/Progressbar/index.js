@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import styles from './styles';
+import {PROGRESSBAR_TRACK_COLORS, TEXT_COLORS} from '../../helpers/colors';
 
 export default class Progressbar extends Component {
     setProgress(e) {
@@ -26,12 +27,12 @@ export default class Progressbar extends Component {
     }
 
     render() {
-        const {label} = this.props;
+        const {label, theme} = this.props;
 
         return (
             <View>
-                <Text style={styles.darkGrey}>{label}</Text>
-                <View style={styles.track} onLayout={(e) => {this.setProgress(e)}}>
+                <Text style={[styles.darkGrey, {color: TEXT_COLORS[theme]}]}>{label}</Text>
+                <View style={[styles.track, {backgroundColor: PROGRESSBAR_TRACK_COLORS[theme]}]} onLayout={(e) => {this.setProgress(e)}}>
                     <View style={styles.bar} ref={(node) => {this.bar = node;}}/>
                 </View>
             </View>

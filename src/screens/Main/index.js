@@ -18,8 +18,7 @@ import {Ionicons} from '@expo/vector-icons';
 import ActionsOverlay from '../../components/Actions';
 import Progressbar from '../../components/Progressbar';
 import styles from './styles';
-import {white} from '../../helpers/colors';
-
+import {green, raspberry, white, BUTTON_COLORS, BACKGROUND_COLORS} from '../../helpers/colors';
 import {
     openActions,
     closeActions,
@@ -27,6 +26,7 @@ import {
     changeProgress,
     changeImage,
 } from '../../actions/mainScreenActions';
+import {setPosition, fetchWeather} from "../../actions/commonActions";
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
@@ -85,19 +85,45 @@ class MainScreen extends Component {
 
         this.position = position;
         this.panResponder = panResponder;
+    }
 
-        this.bgColor = position.x.interpolate({
-            inputRange: [-WINDOW_WIDTH, 0, WINDOW_WIDTH],
-            outputRange: ['#B22746', '#cccccc', '#a3c644']
+    async getPosition() {
+        const {status} = await Permissions.askAsync(Permissions.LOCATION);
+        this.hasLocationPermission = status === 'granted';
+
+        return new Promise((resolve, reject) => {
+            if (!this.hasLocationPermission) {
+                reject(new Error('No permission!'));
+            }
+
+            navigator.geolocation.getCurrentPosition((position) => {
+                resolve(position);
+            }, (error) => {
+                reject(error);
+            }, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 1000,
+            });
         });
     }
 
     async componentWillMount() {
-        const imageURI = await AsyncStorage.getItem('imageURI');
-        imageURI && this.props.changeImage(imageURI);
+        try {
+            const imageURI = await AsyncStorage.getItem('imageURI');
+            imageURI && this.props.changeImage(imageURI);
 
-        const {status} = await Permissions.askAsync(Permissions.CAMERA);
-        this.hasCameraPermission = status === 'granted';
+            const {status} = await Permissions.askAsync(Permissions.CAMERA);
+            this.hasCameraPermission = status === 'granted';
+
+            const position = await this.getPosition();
+            if (position) {
+                this.props.setPosition(position);
+                this.props.fetchWeather(position);
+            }
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
     }
 
     getImageStyle() {
@@ -134,7 +160,7 @@ class MainScreen extends Component {
 
     async pickImage() {
         try {
-            let result = await ImagePicker.launchCameraAsync({
+            const result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [1, 1],
                 quality: .5,
@@ -160,12 +186,16 @@ class MainScreen extends Component {
             openActions,
             navigation,
             imageURI,
+            theme,
         } = this.props;
-
         const imageSrc = imageURI ? {uri: imageURI} : require('../../images/development.png');
+        const bgColor = this.position.x.interpolate({
+            inputRange: [-WINDOW_WIDTH, 0, WINDOW_WIDTH],
+            outputRange: [raspberry, BACKGROUND_COLORS[theme], green]
+        });
 
         return (
-            <Animated.View style={[styles.container, {backgroundColor: this.bgColor}]}>
+            <Animated.View style={[styles.container, {backgroundColor: BACKGROUND_COLORS[theme]}, {backgroundColor: bgColor}]}>
                 <ActionsOverlay
                     onActionPress={(action) => {
                         this.onActionPress(action)
@@ -187,21 +217,21 @@ class MainScreen extends Component {
                         </Animated.View>
                     </View>
                     <View style={styles.progressWrapper}>
-                        <Progressbar label={'Personal'} value={personal}/>
-                        <Progressbar label={'Project activities'} value={projectActivities}/>
-                        <Progressbar label={'Soft skills'} value={softSkills}/>
-                        <Progressbar label={'Hard skills'} value={hardSkills}/>
+                        <Progressbar label={'Personal'} value={personal} theme={theme}/>
+                        <Progressbar label={'Project activities'} value={projectActivities} theme={theme}/>
+                        <Progressbar label={'Soft skills'} value={softSkills} theme={theme}/>
+                        <Progressbar label={'Hard skills'} value={hardSkills} theme={theme}/>
                     </View>
                     <View style={styles.buttonsWrapper}>
                         <TouchableOpacity
-                            style={styles.button}
+                            style={[styles.button, {backgroundColor: BUTTON_COLORS[theme]}]}
                             onPress={() => {
                                 openActions()
                             }}>
                             <Text style={styles.buttonText}>Actions</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={styles.button}
+                            style={[styles.button, {backgroundColor: BUTTON_COLORS[theme]}]}
                             onPress={() => {
                                 this.pickImage()
                             }}
@@ -209,7 +239,7 @@ class MainScreen extends Component {
                             <Text style={styles.buttonText}>Change image</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={styles.button}
+                            style={[styles.button, {backgroundColor: BUTTON_COLORS[theme]}]}
                             onPress={() => {
                                 this.logout()
                             }}>
@@ -223,7 +253,7 @@ class MainScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state.mainScreen};
+    return {...state.mainScreen, ...state.common};
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -233,6 +263,8 @@ const mapDispatchToProps = (dispatch) => {
         logout: () => dispatch(logout()),
         changeProgress: (progress) => dispatch(changeProgress(progress)),
         changeImage: (imageURI) => dispatch(changeImage(imageURI)),
+        setPosition: (position) => dispatch(setPosition(position)),
+        fetchWeather: (position) => dispatch(fetchWeather(position)),
     }
 };
 

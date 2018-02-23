@@ -3,12 +3,10 @@ import {
     View,
     Text, Alert,
 } from 'react-native';
-import {Permissions} from "expo";
 import {connect} from "react-redux";
 
 import styles from './styles';
-import {white, black07} from '../../helpers/colors';
-import {setPosition} from "../../actions/aboutScreenActions";
+import {white, black07, BACKGROUND_COLORS, TEXT_COLORS} from '../../helpers/colors';
 
 class AboutScreen extends Component {
     static navigationOptions = ({navigation}) => {
@@ -32,33 +30,19 @@ class AboutScreen extends Component {
         };
     };
 
-    async componentDidMount() {
-        const {status} = await Permissions.askAsync(Permissions.LOCATION);
-        this.hasLocationPermission = status === 'granted';
-
-        if (this.hasLocationPermission) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                this.props.setPosition(position);
-            }, (error) => {
-                Alert.alert('Error', 'Cannot get current position!');
-            }, {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 1000,
-            });
-        }
-    }
-
     render() {
-        const {navigation, position} = this.props;
+        const {navigation, position, theme} = this.props;
         const username = navigation.state.params.username || 'unknown';
 
         return (
-            <View style={styles.container}>
-                <Text style={styles.aboutText}>
+            <View style={[styles.container, {backgroundColor: BACKGROUND_COLORS[theme]}]}>
+                <Text style={[styles.aboutText, {color: TEXT_COLORS[theme]}]}>
                     Username: <Text style={styles.bold}>{username}</Text>
                 </Text>
-                <Text style={styles.aboutText}>
+                <Text style={[styles.aboutText, {color: TEXT_COLORS[theme]}]}>
+                    Theme: <Text style={styles.bold}>{theme}</Text>
+                </Text>
+                <Text style={[styles.aboutText, {color: TEXT_COLORS[theme]}]}>
                     Position:
                     {'\n'}
                     Lat: <Text style={styles.bold}>{position.coords.latitude}</Text>
@@ -71,13 +55,7 @@ class AboutScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state.aboutScreen};
+    return {...state.common};
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setPosition: (position) => dispatch(setPosition(position)),
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AboutScreen);
+export default connect(mapStateToProps)(AboutScreen);
